@@ -1,6 +1,6 @@
 FROM openjdk:17-alpine
 
-ARG JAR_PATH=build/libs/*.jar
+WORKDIR JAR_PATH=build/libs/*.jar
 
 COPY ${JAR_PATH} salary.jar
 
