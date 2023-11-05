@@ -4,4 +4,4 @@ docker stop was
 
 docker rm was
 
-docker run --env-file /root/.env -d -p 8080:8080 --name salary salary
+docker run --env-file /root/.env -d -p 8080:8080 --name was was
