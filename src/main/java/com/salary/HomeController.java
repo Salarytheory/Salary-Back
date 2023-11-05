@@ -12,6 +12,6 @@ public class HomeController {
 
     @GetMapping("health")
     public String checkHealth(){
-        return "헬스체크용 api_ver_0.0.2";
+        return "헬스체크용 api_ver_0.0.3";
     }
 }
