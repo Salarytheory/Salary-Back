@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     @GetMapping("/")
     public String index(){
-        return "hello salary";
+        return "hello salary ver_0.1";
     }
 }
