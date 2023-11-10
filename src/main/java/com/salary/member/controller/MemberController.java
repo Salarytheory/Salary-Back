@@ -1,0 +1,66 @@
+package com.salary.member.controller;
+
+import com.salary.config.jwt.JwtToken;
+import com.salary.config.jwt.JwtTokenProvider;
+import com.salary.config.jwt.RefreshTokenRepository;
+import com.salary.member.dto.SocialAuthInfoDto;
+import com.salary.member.entity.Member;
+import com.salary.member.service.MemberService;
+import com.salary.member.service.StateManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@Tag(name = "유저 API", description = "로그인, 회원가입 등 유저와 관련된 API")
+@RestController
+@RequestMapping("/api/v1/member")
+@Slf4j
+@RequiredArgsConstructor
+public class MemberController {
+    private final StateManager stateManager;
+    private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @PostMapping("/login-state")
+    @Operation(summary = "소셜로그인 시도 시, 상태값 전달",
+            description = "무작위 uuid 상태값을 받아 저장한다. 이후 소셜로그인 시 함께오는 state와 일치여부를 검증한다")
+    public ResponseEntity<Void> saveLoginState(@Parameter(description = "랜덤한 UUID 값")
+                                                   @RequestHeader("state") String state){
+        stateManager.saveState(state);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/social-login")
+    @Operation(summary = "소셜로그인", description = "사용자정보를 받아서 로그인 혹은 회원가입처리 후 jwt토큰을 헤더에 담아 반환한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공, 헤더에 access-token 담아서 반환"),
+            @ApiResponse(responseCode = "400", description = "로그인 실패, state 혹은 sub 확인"),
+            @ApiResponse(responseCode = "500", description = "서버에러")
+    })
+    public ResponseEntity<Void> socialLogin(@Parameter(description = "랜덤한 UUID 값")
+                                                @RequestHeader("state") String state, @RequestBody SocialAuthInfoDto socialAuthInfo){
+        try {
+            Member member = memberService.socialLogin(state, socialAuthInfo);
+            JwtToken jwtToken = jwtTokenProvider.createToken(member);
+            refreshTokenRepository.save(jwtToken.getRefreshToken(), member.getSub());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("access-token", jwtToken.getAccessToken());
+            return new ResponseEntity<>(headers, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            log.error("system error : ", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
