@@ -1,7 +1,9 @@
 FROM openjdk:17-alpine
 
-ARG JAR_PATH=build/libs/*.jar
+WORKDIR /home/project_dev/Salary-Back
 
-COPY ${JAR_PATH} salary.jar
+COPY . /home/project_dev/Salary-Back
 
-ENTRYPOINT ["java", "-jar", "salary.jar"]
+RUN ./gradlew clean build
+
+CMD ["java", "-jar", "/home/project_dev/Salary-Back/build/libs/salary.jar"]
