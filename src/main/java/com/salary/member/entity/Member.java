@@ -1,5 +1,6 @@
 package com.salary.member.entity;
 
+import com.salary.global.entity.BaseTimeEntity;
 import com.salary.member.dto.SocialAuthInfoDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Table(name = "member")
 @NoArgsConstructor @ToString
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
