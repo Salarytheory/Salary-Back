@@ -24,6 +24,8 @@ spring:
 
   jwt:
     secret-key: "${JWT_SECRET_KEY}"
+  state:
+    secret-key: "${STATE_SECRET_KEY}"
 
 springdoc:
   packages-to-scan: com.salary

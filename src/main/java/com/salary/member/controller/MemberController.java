@@ -32,10 +32,17 @@ public class MemberController {
 
     @PostMapping("/login-state")
     @Operation(summary = "소셜로그인 시도 시, 상태값 전달",
-            description = "무작위 uuid 상태값을 받아 저장한다. 이후 소셜로그인 시 함께오는 state와 일치여부를 검증한다")
-    public ResponseEntity<Void> saveLoginState(@Parameter(description = "랜덤한 UUID 값")
-                                                   @RequestHeader("state") String state){
-        stateManager.saveState(state);
+            description = "secretKey를 해싱한 상태값을 받아 저장한다. 이후 소셜로그인 시 함께오는 state와 일치여부를 검증한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "state값 저장 성공"),
+            @ApiResponse(responseCode = "400", description = "state값 검증 실패"),
+    })
+    public ResponseEntity<Void> saveLoginState(@RequestHeader String state, @RequestHeader String nonce){
+        try {
+            stateManager.saveState(state, nonce);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

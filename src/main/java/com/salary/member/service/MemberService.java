@@ -19,7 +19,7 @@ public class MemberService {
     }
 
     public Member socialLogin(String state, SocialAuthInfoDto socialAuthInfo){
-        boolean isValid = stateManager.validate(state);
+        boolean isValid = stateManager.isExists(state);
         if(isValid){
             Member member = memberRepository.findBySub(socialAuthInfo.sub()).orElse(null);
             if(member == null) member = memberRepository.save(new Member(socialAuthInfo));
