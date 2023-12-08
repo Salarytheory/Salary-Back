@@ -1,4 +1,4 @@
-package com.salary.config.jwt;
+package com.salary.jwt;
 
 import com.salary.member.entity.Member;
 import com.salary.member.repository.MemberRepository;
@@ -43,11 +43,7 @@ public class JwtTokenProvider {
     }
 
     public JwtToken createToken(Member member) {
-        String role = member.getRole();
-        String sub = member.getSub();
-
-        Claims claims = Jwts.claims().setSubject(sub);
-        claims.put("role", role);
+        Claims claims = getClaims(member);
         Date now = new Date();
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
@@ -68,17 +64,26 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(String sub){
-        Claims claims = Jwts.claims().setSubject(sub);
-        Member member = memberRepository.findBySub(sub).orElse(new Member());
+        Claims claims = getClaims(sub);
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-        claims.put("role", member.getRole());
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(getExpiration())
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createShortAccessToken(String sub, long second){
+        Claims claims = getClaims(sub);
         Date now = new Date();
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
+                .setExpiration(new Date(now.getTime() + second * 1000L))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -96,10 +101,6 @@ public class JwtTokenProvider {
         return request.getHeader("access-token");
     }
 
-    public String getRefreshToken(HttpServletRequest request){
-        return request.getHeader("refresh-token");
-    }
-
     public boolean validateAccessToken(String jwtToken) {
         if(jwtToken == null) return false;
         try {
@@ -109,5 +110,27 @@ public class JwtTokenProvider {
             log.error("access-token 검증 시 오류 발생");
             return false;
         }
+    }
+
+    private Claims getClaims(String sub){
+        Claims claims = Jwts.claims().setSubject(sub);
+        Member member = memberRepository.findBySub(sub).orElse(new Member());
+
+        claims.put("role", member.getRole());
+        return claims;
+    }
+
+    private Claims getClaims(Member member){
+        String role = member.getRole();
+        String sub = member.getSub();
+
+        Claims claims = getClaims(sub);
+        claims.put("role", role);
+        return claims;
+    }
+
+    private Date getExpiration(){
+        Date now = new Date();
+        return new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME);
     }
 }

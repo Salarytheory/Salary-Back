@@ -1,8 +1,8 @@
 package com.salary.member.controller;
 
-import com.salary.config.jwt.JwtToken;
-import com.salary.config.jwt.JwtTokenProvider;
-import com.salary.config.jwt.RefreshTokenRepository;
+import com.salary.jwt.JwtToken;
+import com.salary.jwt.JwtTokenProvider;
+import com.salary.jwt.RefreshTokenRepository;
 import com.salary.member.dto.SocialAuthInfoDto;
 import com.salary.member.entity.Member;
 import com.salary.member.service.MemberService;
@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "유저 API", description = "로그인, 회원가입 등 유저와 관련된 API")
@@ -69,5 +70,15 @@ public class MemberController {
             log.error("system error : ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/target-amount")
+    @Operation(summary = "목표금액설정", description = "매월 설정한 계획금액을 전달하여 저장한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "저장성공")
+    })
+    public ResponseEntity<Void> saveTargetAmount(@AuthenticationPrincipal Member member, @RequestParam("target-amount") long targetAmount){
+        memberService.save(member, targetAmount);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

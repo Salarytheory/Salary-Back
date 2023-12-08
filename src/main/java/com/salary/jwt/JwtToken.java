@@ -1,4 +1,4 @@
-package com.salary.config.jwt;
+package com.salary.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

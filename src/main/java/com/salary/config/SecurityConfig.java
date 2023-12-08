@@ -1,8 +1,8 @@
 package com.salary.config;
 
-import com.salary.config.jwt.JwtAuthenticationFilter;
-import com.salary.config.jwt.JwtTokenProvider;
-import com.salary.config.jwt.RefreshTokenRepository;
+import com.salary.jwt.JwtAuthenticationFilter;
+import com.salary.jwt.JwtTokenProvider;
+import com.salary.jwt.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +35,8 @@ public class SecurityConfig {
                 .httpBasic().disable();
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/home/health", "/api/v1/member/**", "/api/v1/jwt/**").permitAll()
-                        .requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/home/health", "/api/v1/member/login-state", "/api/v1/member/login-state").permitAll()
+                        .requestMatchers("/api/v1/jwt/**", "/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated());
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

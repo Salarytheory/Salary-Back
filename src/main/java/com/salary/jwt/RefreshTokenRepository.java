@@ -1,4 +1,4 @@
-package com.salary.config.jwt;
+package com.salary.jwt;
 
 import com.salary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

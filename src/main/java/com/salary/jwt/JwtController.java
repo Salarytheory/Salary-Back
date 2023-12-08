@@ -1,6 +1,7 @@
-package com.salary.config.jwt;
+package com.salary.jwt;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,23 @@ public class JwtController {
     public ResponseEntity<Void> getAccessToken(@RequestParam String sub){
         if(refreshTokenRepository.validate(sub)){
             String accessToken = jwtTokenProvider.createAccessToken(sub);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("access-token", accessToken);
+            return new ResponseEntity<>(headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/test-access-token")
+    @Operation(summary = "accessToken 발급테스트", description = "시간만료 테스트를 위한 임시 api")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "헤더에 access-token 담아서 반환"),
+            @ApiResponse(responseCode = "400", description = "리프레시 토큰 만료. 재로그인 필요")
+    })
+    public ResponseEntity<Void> getTestAccessToken(@RequestParam String sub,
+                                                   @Parameter(description = "유효시간(초)") @RequestParam long second){
+        if(refreshTokenRepository.validate(sub)){
+            String accessToken = jwtTokenProvider.createShortAccessToken(sub, second);
             HttpHeaders headers = new HttpHeaders();
             headers.add("access-token", accessToken);
             return new ResponseEntity<>(headers, HttpStatus.OK);
