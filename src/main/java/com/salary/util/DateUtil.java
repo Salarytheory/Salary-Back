@@ -26,4 +26,8 @@ public class DateUtil {
         YearMonth yearMonth = YearMonth.of(year, month);
         return yearMonth.lengthOfMonth();
     }
+
+    public static LocalDate getNextMonthDate(LocalDate prev){
+        return prev.plusMonths(1).minusDays(1);
+    }
 }

@@ -27,4 +27,9 @@ public class MemberService {
         }
         throw new IllegalArgumentException();
     }
+
+    public void setResetDay(Member member, int resetDay){
+        member.setResetDay(resetDay);
+        memberRepository.save(member);
+    }
 }

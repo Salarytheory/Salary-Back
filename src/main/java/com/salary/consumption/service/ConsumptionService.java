@@ -2,21 +2,20 @@ package com.salary.consumption.service;
 
 import com.salary.category.entity.Category;
 import com.salary.category.repository.CategoryQueryRepository;
-import com.salary.consumption.dto.ConsumptionRecordDto;
-import com.salary.consumption.dto.ConsumptionSummaryDto;
-import com.salary.consumption.dto.StupidConsumptionCurrentSituationDto;
-import com.salary.consumption.dto.TargetAmountDto;
+import com.salary.consumption.dto.*;
 import com.salary.consumption.entity.Consumption;
 import com.salary.consumption.repository.ConsumptionQueryRepository;
 import com.salary.consumption.repository.ConsumptionRepository;
 import com.salary.member.entity.Member;
 import com.salary.plan.entity.GoalManagement;
 import com.salary.plan.repository.GoalManagementQueryRepository;
+import com.salary.util.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,15 +27,17 @@ public class ConsumptionService {
     private final GoalManagementQueryRepository goalManagementQueryRepository;
 
     public ConsumptionSummaryDto getSummary(Member member, String baseDate){
-        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, baseDate);
-//        long targetAmount = member.getTargetAmount();
         long targetAmount = 0;
-        long totalSpentAmount = consumptionQueryRepository.getTotalSpentAmount(member);
+        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, baseDate);
+        if(goalManagement != null){
+            targetAmount = goalManagement.getTargetAmount();
+        }
+        long totalSpentAmount = consumptionQueryRepository.getTotalSpentAmount(member, baseDate);
         return new ConsumptionSummaryDto(targetAmount, totalSpentAmount, targetAmount - totalSpentAmount);
     }
 
-    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member){
-        return consumptionQueryRepository.getStupidConsumptionCurrentSituation(member);
+    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String baseDate){
+        return consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, baseDate);
     }
 
     public void record(Member member, ConsumptionRecordDto consumptionRecordDto){
@@ -48,7 +49,29 @@ public class ConsumptionService {
         consumptionRepository.save(new Consumption(member, consumptionRecordDto, category));
     }
 
-    public void getMonthlyConsumptionHistory(Member member, String baseDate){
+    public PaginationDto<List<ConsumptionHistoryDto>> getMonthlyConsumptionHistory(Member member, String baseDate, Pageable pageable){
+        List<ConsumptionHistoryDto> result = consumptionQueryRepository.getMonthlyConsumptionHistory(member, baseDate, pageable);
+        long count = consumptionQueryRepository.getMonthlyConsumptionHistoryCount(member, baseDate, pageable);
+        return new PaginationDto<>(result, count);
 
+    }
+
+    public ConsumptionHistoryDto getConsumptionHistory(Long id){
+        return consumptionQueryRepository.getConsumptionHistory(id);
+    }
+
+    public void modify(Long id, ConsumptionRecordDto consumptionRecordDto){
+        Category category = categoryQueryRepository.getCategory(consumptionRecordDto.categoryName());
+        if(category == null){
+            log.info("TODO 커스텀 카테고리 저장");
+            throw new RuntimeException();
+        }
+        Consumption consumption = consumptionRepository.findById(id).orElseThrow();
+        consumption.update(consumptionRecordDto, category);
+        consumptionRepository.save(consumption);
+    }
+
+    public void remove(Long id){
+        consumptionRepository.deleteById(id);
     }
 }

@@ -46,4 +46,12 @@ public class Consumption {
         this.usedAt = consumptionRecordDto.usedAt();
         this.grade = Grade.valueOf(consumptionRecordDto.grade());
     }
+
+    public void update(ConsumptionRecordDto consumptionRecordDto, Category category){
+        this.category = category;
+        this.name = consumptionRecordDto.name();
+        this.amount = consumptionRecordDto.spentAmount();
+        this.usedAt = consumptionRecordDto.usedAt();
+        this.grade = Grade.valueOf(consumptionRecordDto.grade());
+    }
 }

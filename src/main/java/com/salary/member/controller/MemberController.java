@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -70,5 +73,16 @@ public class MemberController {
             log.error("system error : ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PatchMapping
+    @Operation(summary = "초기화날짜 수정", description = "계획 및 목표금액이 초기화되는 날짜를 설정한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공, 헤더에 access-token 담아서 반환"),
+            @ApiResponse(responseCode = "400", description = "날짜 범위초과 (1~31)")
+    })
+    public void setResetDay(@AuthenticationPrincipal Member member,
+                            @RequestParam("reset-day") @Min(1) @Max(31) int resetDay){
+        memberService.setResetDay(member, resetDay);
     }
 }

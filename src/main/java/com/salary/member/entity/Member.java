@@ -45,4 +45,8 @@ public class Member extends BaseTimeEntity {
     public void prePersist() {
         this.resetDay = 1;
     }
+
+    public void setResetDay(int resetDay){
+        this.resetDay = resetDay;
+    }
 }
