@@ -20,8 +20,8 @@ public class DateTest {
 
     @Test
     void targetDateTest(){
-        String yyyyMM = "2024-02";
-        int resetDay = 30;
+        String yyyyMM = "2024-01";
+        int resetDay = 25;
         String[] cutDate = yyyyMM.split("-");
         LocalDate start = LocalDate.of(Integer.parseInt(cutDate[0]), Integer.parseInt(cutDate[1]), resetDay);
         LocalDate end = start.plusMonths(1).minusDays(1);
