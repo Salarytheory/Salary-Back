@@ -17,6 +17,7 @@ jobs:
           port: ${{secrets.REMOTE_SSH_PORT}}
           script: | 
             cd /home/project_dev/Salary-Back
+            git stash
             git pull origin develop
-            chmod 777 deploy.sh
+            chmod 755 deploy.sh
             ./deploy.sh

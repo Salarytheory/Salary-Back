@@ -17,4 +17,15 @@ public class DateTest {
 
         int lastDay = yearMonth.lengthOfMonth();
     }
+
+    @Test
+    void targetDateTest(){
+        String yyyyMM = "2024-02";
+        int resetDay = 30;
+        String[] cutDate = yyyyMM.split("-");
+        LocalDate start = LocalDate.of(Integer.parseInt(cutDate[0]), Integer.parseInt(cutDate[1]), resetDay);
+        LocalDate end = start.plusMonths(1).minusDays(1);
+
+        System.out.println(start + " // " + end);
+    }
 }

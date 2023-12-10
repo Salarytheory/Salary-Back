@@ -25,7 +25,6 @@ public class ConsumptionQueryRepository {
                 .leftJoin(QMember.member)
                 .on(consumption.member.id.eq(QMember.member.id))
                 .where(QMember.member.eq(member))
-                .groupBy(consumption.member)
                 .fetchOne();
         return totalAmount == null ? 0 : totalAmount;
     }

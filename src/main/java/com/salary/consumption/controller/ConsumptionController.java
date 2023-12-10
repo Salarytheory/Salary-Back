@@ -3,6 +3,7 @@ package com.salary.consumption.controller;
 import com.salary.consumption.dto.ConsumptionRecordDto;
 import com.salary.consumption.dto.ConsumptionSummaryDto;
 import com.salary.consumption.dto.StupidConsumptionCurrentSituationDto;
+import com.salary.consumption.dto.TargetAmountDto;
 import com.salary.consumption.service.ConsumptionService;
 import com.salary.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,12 +27,13 @@ public class ConsumptionController {
     private final ConsumptionService consumptionService;
 
     @GetMapping("/summary")
-    @Operation(summary = "지출현황x요약", description = "계획한금액, 소비금액, 남은금액을 반환한다")
+    @Operation(summary = "지출현황요약", description = "계획한금액, 소비금액, 남은금액을 반환한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
-    public ResponseEntity<ConsumptionSummaryDto> getSummary(@AuthenticationPrincipal Member member){
-        ConsumptionSummaryDto consumptionSummaryDto = consumptionService.getSummary(member);
+    public ResponseEntity<ConsumptionSummaryDto> getSummary(@AuthenticationPrincipal Member member,
+                                                            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String baseDate){
+        ConsumptionSummaryDto consumptionSummaryDto = consumptionService.getSummary(member, baseDate);
         return new ResponseEntity<>(consumptionSummaryDto, HttpStatus.OK);
     }
 

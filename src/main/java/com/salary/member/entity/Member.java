@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -22,9 +23,6 @@ public class Member extends BaseTimeEntity {
 
     @Column(name = "reset_day")
     private int resetDay;
-
-    @Column(name = "target_amount")
-    private long targetAmount;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -43,7 +41,8 @@ public class Member extends BaseTimeEntity {
         this.role = Role.USER;
     }
 
-    public void setTargetAmount(long targetAmount){
-        this.targetAmount = targetAmount;
+    @PrePersist
+    public void prePersist() {
+        this.resetDay = 1;
     }
 }

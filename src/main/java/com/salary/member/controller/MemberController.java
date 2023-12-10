@@ -71,14 +71,4 @@ public class MemberController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/target-amount")
-    @Operation(summary = "목표금액설정", description = "매월 설정한 계획금액을 전달하여 저장한다")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "저장성공")
-    })
-    public ResponseEntity<Void> saveTargetAmount(@AuthenticationPrincipal Member member, @RequestParam("target-amount") long targetAmount){
-        memberService.save(member, targetAmount);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

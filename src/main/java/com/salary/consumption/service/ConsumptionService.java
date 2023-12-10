@@ -5,13 +5,18 @@ import com.salary.category.repository.CategoryQueryRepository;
 import com.salary.consumption.dto.ConsumptionRecordDto;
 import com.salary.consumption.dto.ConsumptionSummaryDto;
 import com.salary.consumption.dto.StupidConsumptionCurrentSituationDto;
+import com.salary.consumption.dto.TargetAmountDto;
 import com.salary.consumption.entity.Consumption;
 import com.salary.consumption.repository.ConsumptionQueryRepository;
 import com.salary.consumption.repository.ConsumptionRepository;
 import com.salary.member.entity.Member;
+import com.salary.plan.entity.GoalManagement;
+import com.salary.plan.repository.GoalManagementQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -20,9 +25,12 @@ public class ConsumptionService {
     private final ConsumptionRepository consumptionRepository;
     private final ConsumptionQueryRepository consumptionQueryRepository;
     private final CategoryQueryRepository categoryQueryRepository;
+    private final GoalManagementQueryRepository goalManagementQueryRepository;
 
-    public ConsumptionSummaryDto getSummary(Member member){
-        long targetAmount = member.getTargetAmount();
+    public ConsumptionSummaryDto getSummary(Member member, String baseDate){
+        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, baseDate);
+//        long targetAmount = member.getTargetAmount();
+        long targetAmount = 0;
         long totalSpentAmount = consumptionQueryRepository.getTotalSpentAmount(member);
         return new ConsumptionSummaryDto(targetAmount, totalSpentAmount, targetAmount - totalSpentAmount);
     }

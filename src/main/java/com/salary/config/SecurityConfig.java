@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .httpBasic().disable();
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/home/health", "/api/v1/member/login-state", "/api/v1/member/login-state").permitAll()
+                        .requestMatchers("/home/health", "/api/v1/member/login-state", "/api/v1/member/social-login").permitAll()
                         .requestMatchers("/api/v1/jwt/**", "/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated());
 

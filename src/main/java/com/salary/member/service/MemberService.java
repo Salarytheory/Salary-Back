@@ -27,9 +27,4 @@ public class MemberService {
         }
         throw new IllegalArgumentException();
     }
-
-    public void save(Member member, long targetAmount){
-        member.setTargetAmount(targetAmount);
-        memberRepository.save(member);
-    }
 }
