@@ -10,9 +10,11 @@ COPY gradle $APP_HOME/gradle
 
 RUN chmod +x gradlew
 
-RUN ./gradlew clean build || return 0
+RUN ./gradlew build || return 0
 
 COPY src $APP_HOME/src
+
+RUN ./gradlew clean build
 
 FROM openjdk:17-alpine as runtime
 
