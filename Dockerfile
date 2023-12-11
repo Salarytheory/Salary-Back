@@ -10,11 +10,15 @@ COPY gradle $APP_HOME/gradle
 
 RUN chmod +x gradlew
 
-RUN source /etc/environment && ./gradlew build || return 0
+RUN source /etc/environment
+
+RUN ./gradlew build || return 0
 
 COPY src $APP_HOME/src
 
-RUN source /etc/environment && ./gradlew clean build
+RUN source /etc/environment
+
+RUN ./gradlew clean build
 
 FROM openjdk:17-alpine
 
