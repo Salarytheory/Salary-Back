@@ -4,10 +4,10 @@ WORKDIR /home/project_dev/Salary-Back
 
 # Gradle 설치
 RUN apk --no-cache add curl
-RUN curl -s "https://get.sdkman.io" > sdkman-install.sh
-RUN chmod +x sdkman-install.sh
-RUN ./sdkman-install.sh
-RUN rm sdkman-install.sh
+COPY sdkman-install.sh /home/project_dev/Salary-Back/sdkman-install.sh
+RUN chmod +x /home/project_dev/Salary-Back/sdkman-install.sh
+RUN /bin/ash /home/project_dev/Salary-Back/sdkman-install.sh
+RUN rm /home/project_dev/Salary-Back/sdkman-install.sh
 
 # Shell을 사용하여 명령어 실행
 SHELL ["/bin/sh", "-c"]
