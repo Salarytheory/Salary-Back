@@ -4,8 +4,8 @@ WORKDIR /home/project_dev/Salary-Back
 
 # Gradle 설치
 RUN apk --no-cache add curl
-RUN curl -s "https://get.sdkman.io" | bash
-RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install gradle
+RUN curl -s "https://get.sdkman.io" | /bin/ash
+RUN /bin/ash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle"
 
 RUN chmod 755 gradlew
 RUN ./gradlew clean build --no-daemon
