@@ -1,23 +1,35 @@
-FROM gradle:6.9.2-openjdk:17-alpine
+FROM gradle:7.6-openjdk:17-alpine as build
+
+ENV APP_HOME=/home/project_dev/Salary-Back
 
 WORKDIR /home/project_dev/Salary-Back
 
-# Gradle 설치
-# RUN apk --no-cache add curl
-# COPY sdkman-install.sh /home/project_dev/Salary-Back/sdkman-install.sh
-# RUN chmod +x /home/project_dev/Salary-Back/sdkman-install.sh
-# RUN /bin/ash /home/project_dev/Salary-Back/sdkman-install.sh
-# RUN rm /home/project_dev/Salary-Back/sdkman-install.sh
-#
-# # Shell을 사용하여 명령어 실행
-# SHELL ["/bin/sh", "-c"]
-# RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install gradle
+WORKDIR $APP_HOME
 
-RUN chmod 755 gradlew
-RUN ./gradlew clean build --no-daemon
+COPY build.gradle settings.gradle gradlew $APP_HOME
 
-ARG JAR_FILE=./build/libs/*.jar
-RUN cp ${JAR_FILE} /salary.jar
+COPY gradle $APP_HOME/gradle
+
+RUN chmod +x gradlew
+
+RUN ./gradlew build || return 0
+
+COPY src $APP_HOME/src
+
+RUN ./gradlew clean build
+
+FROM openjdk:17-alpine
+
+ENV APP_HOME=/home/project_dev/Salary-Back
+ARG ARTIFACT_NAME=salary.jar
+ARG JAR_FILE_PATH=build/libs/salary.jar
+
+WORKDIR $APP_HOME
+
+COPY --from=build $APP_HOME/$JAR_FILE_PATH $ARTIFACT_NAME
+
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "salary.jar"]
 
 # FROM openjdk:17-alpine
