@@ -10,17 +10,9 @@ COPY gradle $APP_HOME/gradle
 
 RUN chmod +x gradlew
 
-RUN chmod 755 /etc/environment
-
-RUN source /etc/environment
-
 RUN ./gradlew build || return 0
 
 COPY src $APP_HOME/src
-
-RUN chmod 755 /etc/environment
-
-RUN source /etc/environment
 
 RUN ./gradlew clean build
 
