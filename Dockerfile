@@ -1,11 +1,10 @@
 FROM openjdk:17-alpine
 
-# RUN git clone https://github.com/brick0123/dummy.git # 깃허브에서 소스코드 clone
 WORKDIR /home/project_dev/Salary-Back
 
 RUN chmod 700 gradlew
 
-RUN ./gradlew clean build
+RUN ./gradlew clean build --no-daemon
 
 ARG JAR_FILE=./build/libs/*.jar
 
