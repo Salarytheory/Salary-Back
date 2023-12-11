@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 as build
+FROM gradle:7.6-openjdk17-alpine as build
 
 ENV APP_HOME=/home/project_dev/Salary-Back
 
@@ -16,7 +16,7 @@ COPY src $APP_HOME/src
 
 RUN ./gradlew clean build
 
-FROM openjdk:17-alpine as runtime
+FROM openjdk:17-alpine
 
 ENV APP_HOME=/home/project_dev/Salary-Back
 ARG ARTIFACT_NAME=salary.jar
