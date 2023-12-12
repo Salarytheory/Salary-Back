@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:8.3-jdk17-alpine AS build
 
 ENV APP_HOME=/home/project_dev/Salary-Back
 
