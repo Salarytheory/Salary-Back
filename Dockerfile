@@ -4,7 +4,7 @@ ENV APP_HOME=/home/project_dev/Salary-Back
 
 WORKDIR /home/project_dev/Salary-Back
 
-COPY build.gradle settings.gradle gradlew $APP_HOME
+COPY build.gradle settings.gradle gradlew $APP_HOME/
 
 COPY gradle $APP_HOME/gradle
 
