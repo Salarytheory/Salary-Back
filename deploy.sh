@@ -19,4 +19,4 @@
 
 docker-compose down --volumes --remove-orphans was
 
-docker-compose up -d
+docker-compose up -d --build
