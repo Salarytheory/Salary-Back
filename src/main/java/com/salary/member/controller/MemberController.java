@@ -3,6 +3,7 @@ package com.salary.member.controller;
 import com.salary.jwt.JwtToken;
 import com.salary.jwt.JwtTokenProvider;
 import com.salary.jwt.RefreshTokenRepository;
+import com.salary.member.dto.MemberInfoDto;
 import com.salary.member.dto.SocialAuthInfoDto;
 import com.salary.member.entity.Member;
 import com.salary.member.service.MemberService;
@@ -14,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -78,11 +78,34 @@ public class MemberController {
     @PatchMapping
     @Operation(summary = "초기화날짜 수정", description = "계획 및 목표금액이 초기화되는 날짜를 설정한다")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공, 헤더에 access-token 담아서 반환"),
+            @ApiResponse(responseCode = "200", description = "수정성공"),
             @ApiResponse(responseCode = "400", description = "날짜 범위초과 (1~31)")
     })
-    public void setResetDay(@AuthenticationPrincipal Member member,
+    public ResponseEntity<Void> setResetDay(@AuthenticationPrincipal Member member,
                             @RequestParam("reset-day") @Min(1) @Max(31) int resetDay){
         memberService.setResetDay(member, resetDay);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping
+    @Operation(summary = "통화단위 설정", description = "원화로 설정된 기본통화단위를 재설정한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "수정성공")
+    })
+    public ResponseEntity<Void> setCurrencyUnit(@AuthenticationPrincipal Member member,
+                                            @RequestParam("currency-unit") String currencyUnit){
+        memberService.setCurrencyUnit(member, currencyUnit);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    @Operation(summary = "유저기본정보조회", description = "유저의 기본 정보를 조회한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회성공"),
+    })
+    public ResponseEntity<MemberInfoDto> getMemberInfo(@AuthenticationPrincipal Member member){
+        return new ResponseEntity<>(
+                new MemberInfoDto(member.getName(), member.getProvider().getKey(),
+                        member.getResetDay(), member.getCurrencyUnit()), HttpStatus.OK);
     }
 }

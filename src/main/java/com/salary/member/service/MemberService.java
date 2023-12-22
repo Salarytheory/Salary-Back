@@ -1,5 +1,6 @@
 package com.salary.member.service;
 
+import com.salary.member.dto.MemberInfoDto;
 import com.salary.member.dto.SocialAuthInfoDto;
 import com.salary.member.entity.Member;
 import com.salary.member.repository.MemberRepository;
@@ -30,6 +31,11 @@ public class MemberService {
 
     public void setResetDay(Member member, int resetDay){
         member.setResetDay(resetDay);
+        memberRepository.save(member);
+    }
+
+    public void setCurrencyUnit(Member member, String currencyUnit){
+        member.setCurrencyUnit(currencyUnit);
         memberRepository.save(member);
     }
 }

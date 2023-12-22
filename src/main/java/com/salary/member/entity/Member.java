@@ -2,6 +2,7 @@ package com.salary.member.entity;
 
 import com.salary.global.entity.BaseTimeEntity;
 import com.salary.member.dto.SocialAuthInfoDto;
+import com.salary.util.RandomNameMaker;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    @Column(name = "currency_unit")
+    private String currencyUnit;
+
     public String getRole(){
         return role.getKey();
     }
@@ -44,9 +48,15 @@ public class Member extends BaseTimeEntity {
     @PrePersist
     public void prePersist() {
         this.resetDay = 1;
+        this.currencyUnit = "₩";
+        this.name = RandomNameMaker.generateRandomString(7);
     }
 
     public void setResetDay(int resetDay){
         this.resetDay = resetDay;
+    }
+
+    public void setCurrencyUnit(String currencyUnit){
+        this.currencyUnit = currencyUnit;
     }
 }
