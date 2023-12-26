@@ -24,6 +24,11 @@ public class MemberService {
         if(isValid){
             Member member = memberRepository.findBySub(socialAuthInfo.sub()).orElse(null);
             if(member == null) member = memberRepository.save(new Member(socialAuthInfo));
+
+            if("N".equals(member.getIsCanceled())){
+                member.restore();
+                memberRepository.save(member);
+            }
             return member;
         }
         throw new IllegalArgumentException();
@@ -36,6 +41,11 @@ public class MemberService {
 
     public void setCurrencyUnit(Member member, String currencyUnit){
         member.setCurrencyUnit(currencyUnit);
+        memberRepository.save(member);
+    }
+
+    public void cancel(Member member){
+        member.cancel();
         memberRepository.save(member);
     }
 }

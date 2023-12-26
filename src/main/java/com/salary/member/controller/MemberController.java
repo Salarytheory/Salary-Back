@@ -108,4 +108,14 @@ public class MemberController {
                 new MemberInfoDto(member.getName(), member.getProvider().getKey(),
                         member.getResetDay(), member.getCurrencyUnit()), HttpStatus.OK);
     }
+
+    @DeleteMapping
+    @Operation(summary = "유저기본정보조회", description = "유저의 기본 정보를 조회한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회성공"),
+    })
+    public ResponseEntity<Void> cancel(@AuthenticationPrincipal Member member){
+        memberService.cancel(member);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

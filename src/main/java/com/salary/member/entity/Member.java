@@ -34,6 +34,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "currency_unit")
     private String currencyUnit;
 
+    @Column(name = "is_canceled")
+    private String isCanceled;
+
     public String getRole(){
         return role.getKey();
     }
@@ -49,11 +52,20 @@ public class Member extends BaseTimeEntity {
     public void prePersist() {
         this.resetDay = 1;
         this.currencyUnit = "₩";
+        this.isCanceled = "Y";
         this.name = RandomNameMaker.generateRandomString(7);
     }
 
     public void setResetDay(int resetDay){
         this.resetDay = resetDay;
+    }
+
+    public void cancel(){
+        this.isCanceled = "N";
+    }
+
+    public void restore(){
+        this.isCanceled = "Y";
     }
 
     public void setCurrencyUnit(String currencyUnit){
