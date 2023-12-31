@@ -1,6 +1,5 @@
 package com.salary.member.service;
 
-import com.salary.member.dto.MemberInfoDto;
 import com.salary.member.dto.SocialAuthInfoDto;
 import com.salary.member.entity.Member;
 import com.salary.member.repository.MemberRepository;

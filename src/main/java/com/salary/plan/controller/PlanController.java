@@ -62,7 +62,7 @@ public class PlanController {
     @Operation(summary = "월별, 카테고리별 목표소비금액 설정", description = "월별과 카테고리별로 목표소비금액을 설정한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회성공"),
-            @ApiResponse(responseCode = "400", description = "카테고리 정보 없음 or 중복목표설정")
+            @ApiResponse(responseCode = "400", description = "카테고리 정보 없음")
     })
     public ResponseEntity<Void> setTargetConsumptionPlan(@AuthenticationPrincipal Member member,
                                          @RequestBody List<MonthlyPlanSetDto> monthlyPlanSetDtoList){

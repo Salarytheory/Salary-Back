@@ -1,9 +1,12 @@
 package com.salary.plan.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.salary.category.entity.Category;
+import com.salary.consumption.dto.MonthlyPlanSetDto;
 import com.salary.member.entity.Member;
 import com.salary.plan.dto.MonthlyPlanDto;
 import com.salary.plan.dto.QMonthlyPlanDto;
+import com.salary.plan.entity.Plan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +25,7 @@ public class PlanQueryRepository {
 
     public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
         return queryFactory.select(new QMonthlyPlanDto(
-                category.name.as("categoryName"), plan.targetAmount,
+                        plan.id, category.name.as("categoryName"), plan.targetAmount,
                         consumption.amount.sum().as("consumptionAmount"),
                         plan.targetAmount.subtract(consumption.amount.sum()).as("remainAmount")
                 ))
@@ -33,5 +36,14 @@ public class PlanQueryRepository {
                         .and(plan.baseDate.eq(baseDate)))
                 .groupBy(category.name, plan.targetAmount)
                 .fetch();
+    }
+
+    public Plan getPlan(MonthlyPlanSetDto monthlyPlanSetDto, Category category, Member member){
+        return queryFactory.select(plan)
+                .from(plan)
+                .where(plan.category.eq(category)
+                        .and(plan.baseDate.eq(monthlyPlanSetDto.baseDate()))
+                        .and(plan.member.eq(member)))
+                .fetchOne();
     }
 }

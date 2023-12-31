@@ -2,7 +2,9 @@ name: App Deploy Workflow
 
 on:
   push:
-    branches: [ "develop" ]
+    branches:
+      - main
+      - develop
 
 jobs:
   build:
@@ -15,9 +17,29 @@ jobs:
           username: ${{secrets.SSH_ID}}
           password: ${{secrets.REMOTE_SSH_KEY}}
           port: ${{secrets.REMOTE_SSH_PORT}}
-          script: | 
-            cd /home/project_dev/Salary-Back
-            git stash
-            git pull origin develop
-            chmod 755 deploy.sh
-            ./deploy.sh
+          script: |
+            # 브랜치에 따라 다른 경로로 이동
+            if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+              cd /home/project/Salary-Back
+            elif [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+              cd /home/project_dev/Salary-Back
+            else
+              echo "Unsupported branch"
+              exit 1
+            fi
+            
+            # 브랜치에 따라 다른 브랜치에서 pull
+            if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+              git stash
+              git pull origin main
+              chmod 755 deploy_main.sh
+              ./deploy_main.sh
+            elif [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+              git stash
+              git pull origin develop
+              chmod 755 deploy_develop.sh
+              ./deploy_develop.sh
+            else
+              echo "Unsupported branch"
+              exit 1
+            fi

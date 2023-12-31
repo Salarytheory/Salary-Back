@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "월별소비계획 현황 dto")
 public record MonthlyPlanDto(
+        @Schema(description = "식별자")
+        Long id,
         @Schema(description = "카테고리 이름")
         String categoryName,
         @Schema(description = "목표금액")
@@ -15,7 +17,8 @@ public record MonthlyPlanDto(
         long remainAmount
 ) {
         @QueryProjection
-        public MonthlyPlanDto(String categoryName, long targetAmount, long consumptionAmount, long remainAmount) {
+        public MonthlyPlanDto(Long id, String categoryName, long targetAmount, long consumptionAmount, long remainAmount) {
+                this.id = id;
                 this.categoryName = categoryName;
                 this.targetAmount = targetAmount;
                 this.consumptionAmount = consumptionAmount;

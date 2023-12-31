@@ -44,4 +44,8 @@ public class Plan {
         this.category = category;
         this.member = member;
     }
+
+    public void modify(MonthlyPlanSetDto monthlyPlanSetDto){
+        this.targetAmount = monthlyPlanSetDto.targetAmount();
+    }
 }

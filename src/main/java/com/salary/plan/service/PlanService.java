@@ -47,7 +47,14 @@ public class PlanService {
         for(MonthlyPlanSetDto monthlyPlanSetDto : monthlyPlanSetDtoList){
             Category category = categoryQueryRepository.getCategory(monthlyPlanSetDto.categoryName());
             if(category == null) throw new RuntimeException();
-            planList.add(new Plan(monthlyPlanSetDto, member, category));
+
+            Plan plan = planQueryRepository.getPlan(monthlyPlanSetDto, category, member);
+            if(plan == null) {
+                planList.add(new Plan(monthlyPlanSetDto, member, category));
+            }else{
+                plan.modify(monthlyPlanSetDto);
+                planList.add(plan);
+            }
         }
         return planList;
     }
