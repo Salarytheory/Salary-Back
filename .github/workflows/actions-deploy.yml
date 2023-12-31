@@ -13,7 +13,7 @@ jobs:
       - name: Set Branch Env
         run: |
           IFS='/' read -ra vBranch <<< "$GITHUB_REF"
-          branch=${vBranch[2]}
+          branch=${vBranch[3]} # 브랜치는 vBranch array에서 3번째 위치에 있습니다.
           echo "BRANCH=$branch" >> $GITHUB_ENV
 
       - name: SSH-deploy
@@ -49,4 +49,3 @@ jobs:
               echo "Unsupported branch"
               exit 1
             fi
-
