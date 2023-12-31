@@ -10,9 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug GITHUB_REF
+          run: echo $GITHUB_REF
       - name: Set Branch Env
         run: |
-          echo $GITHUB_REF
           IFS='/' read -ra vBranch <<< "$GITHUB_REF"
           branch=${vBranch[3]} # 브랜치는 vBranch array에서 3번째 위치에 있습니다.
           echo "BRANCH=$branch" >> $GITHUB_ENV
