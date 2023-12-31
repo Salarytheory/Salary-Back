@@ -1,0 +1,23 @@
+name: Develop Branch Deploy Workflow
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH-deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.REMOTE_IP}}
+          username: ${{secrets.SSH_ID}}
+          password: ${{secrets.REMOTE_SSH_KEY}}
+          port: ${{secrets.REMOTE_SSH_PORT}}
+          script: |
+              cd /home/project_dev/Salary-Back
+              git stash
+              git pull origin develop
+              chmod 755 deploy_develop.sh
+              ./deploy_develop.sh

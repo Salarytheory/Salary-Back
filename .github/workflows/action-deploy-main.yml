@@ -1,0 +1,23 @@
+name: Main Branch Deploy Workflow
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH-deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.REMOTE_IP}}
+          username: ${{secrets.SSH_ID}}
+          password: ${{secrets.REMOTE_SSH_KEY}}
+          port: ${{secrets.REMOTE_SSH_PORT}}
+          script: |
+            cd /home/project/Salary-Back
+            git stash
+            git pull origin main
+            chmod 755 deploy_main.sh
+            ./deploy_develop.sh
