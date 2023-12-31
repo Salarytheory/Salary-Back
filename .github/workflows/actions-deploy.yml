@@ -18,28 +18,31 @@ jobs:
           password: ${{secrets.REMOTE_SSH_KEY}}
           port: ${{secrets.REMOTE_SSH_PORT}}
           script: |
+            # 현재 브랜치 확인
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            
             # 브랜치에 따라 다른 경로로 이동
-            if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            if [ "$CURRENT_BRANCH" = "main" ]; then
               cd /home/project/Salary-Back
-            elif [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+            elif [ "$CURRENT_BRANCH" = "develop" ]; then
               cd /home/project_dev/Salary-Back
             else
-              echo "Unsupported branch"
+              echo "Unsupported branch: $CURRENT_BRANCH"
               exit 1
             fi
             
             # 브랜치에 따라 다른 브랜치에서 pull
-            if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            if [ "$CURRENT_BRANCH" = "main" ]; then
               git stash
               git pull origin main
               chmod 755 deploy_main.sh
               ./deploy_main.sh
-            elif [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+            elif [ "$CURRENT_BRANCH" = "develop" ]; then
               git stash
               git pull origin develop
               chmod 755 deploy_develop.sh
               ./deploy_develop.sh
             else
-              echo "Unsupported branch"
+              echo "Unsupported branch: $CURRENT_BRANCH"
               exit 1
             fi
