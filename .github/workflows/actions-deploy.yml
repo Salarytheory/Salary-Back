@@ -30,7 +30,7 @@ jobs:
             elif [ "$BRANCH" = "develop" ]; then
               cd /home/project_dev/Salary-Back
             else
-              echo $BRANCH
+              echo $GITHUB_REF
               echo "Unsupported branch"
               exit 1
             fi
