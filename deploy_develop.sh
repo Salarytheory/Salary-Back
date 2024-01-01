@@ -15,7 +15,7 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8080:8080 --name was was
+docker run --env-file /root/.env -d -p 8080:8080 --name was was java -Dspring.profiles.active=dev -jar salary.jar
 
 #docker-compose down --volumes --remove-orphans was
 #

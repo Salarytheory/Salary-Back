@@ -1,0 +1,50 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  config:
+    activate:
+      on-profile: db-proc
+  datasource:
+    url: "${DATABASE_MAIN_URL}"
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: "${DATABASE_ID}"
+    password: "${DATABASE_PASSWORD}"
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  redis:
+    host: "${REDIS_HOST}"
+    port: "${REDIS_PORT}"
+    password: "${REDIS_PASSWORD}"
+
+  jwt:
+    secret-key: "${JWT_SECRET_KEY}"
+  state:
+    secret-key: "${STATE_SECRET_KEY}"
+
+springdoc:
+  packages-to-scan: com.salary
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /api-docs.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  cache:
+    disabled: true
