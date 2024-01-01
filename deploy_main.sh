@@ -15,4 +15,4 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8082:8082 --name was_main was_main java -Dspring.profiles.active=proc -jar salary.jar
+docker run --env-file /root/.env -d -p 8082:8082 "SPRING_PROFILES_ACTIVE=proc" --name was_main was_main
