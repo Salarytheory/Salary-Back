@@ -15,7 +15,7 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8080:8080 "SPRING_PROFILES_ACTIVE=dev" --name was was java
+docker run --env-file /root/.env -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev --name was was java
 
 #docker-compose down --volumes --remove-orphans was
 #
