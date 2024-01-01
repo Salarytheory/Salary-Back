@@ -4,7 +4,10 @@ spring:
     group:
       dev:
         - db-dev
+        - port-dev
       proc:
         - db-proc
+        - port-proc
     include:
       - db
+      - port
