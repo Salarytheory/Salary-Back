@@ -7,6 +7,7 @@ import com.salary.consumption.entity.Consumption;
 import com.salary.consumption.repository.ConsumptionQueryRepository;
 import com.salary.consumption.repository.ConsumptionRepository;
 import com.salary.member.entity.Member;
+import com.salary.member.repository.MemberRepository;
 import com.salary.plan.entity.GoalManagement;
 import com.salary.plan.repository.GoalManagementQueryRepository;
 import com.salary.util.dto.PaginationDto;
@@ -14,15 +15,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ConsumptionService {
     private final ConsumptionRepository consumptionRepository;
     private final ConsumptionQueryRepository consumptionQueryRepository;
+    private final MemberRepository memberRepository;
     private final CategoryQueryRepository categoryQueryRepository;
     private final GoalManagementQueryRepository goalManagementQueryRepository;
 
@@ -36,7 +40,13 @@ public class ConsumptionService {
         return new ConsumptionSummaryDto(targetAmount, totalSpentAmount, targetAmount - totalSpentAmount);
     }
 
-    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String baseDate){
+    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String baseDate, String isWidget){
+        StupidConsumptionCurrentSituationDto stupidConsumptionCurrentSituation
+                = consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, baseDate);
+        if("Y".equals(isWidget)){
+            member.useWidget();
+            memberRepository.save(member);
+        }
         return consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, baseDate);
     }
 

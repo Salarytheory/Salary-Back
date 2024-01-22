@@ -38,15 +38,16 @@ public class ConsumptionController {
         return new ResponseEntity<>(consumptionSummaryDto, HttpStatus.OK);
     }
 
-    @GetMapping("/stupid-situation/{base-date}")
+    @GetMapping("/stupid-situation/{base-date}/{is-widget}")
     @Operation(summary = "스튜핏 소비 현황 조회", description = "스튜핏, 그레잇 소비금액 및 비율을 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
     public ResponseEntity<StupidConsumptionCurrentSituationDto> getStupidConsumptionCurrentSituation(
             @AuthenticationPrincipal Member member,
-            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String baseDate){
-        StupidConsumptionCurrentSituationDto result = consumptionService.getStupidConsumptionCurrentSituation(member, baseDate);
+            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String baseDate,
+            @Parameter(description = "위젯o : Y, 위젯x : N") @PathVariable("is-widget") String isWidget){
+        StupidConsumptionCurrentSituationDto result = consumptionService.getStupidConsumptionCurrentSituation(member, baseDate, isWidget);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -23,7 +23,7 @@ public class GoalManagement {
     @Column(name = "target_amount")
     private long targetAmount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

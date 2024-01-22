@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -34,6 +33,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "currency_unit")
     private String currencyUnit;
 
+    @Column(name = "is_widget")
+    private String isWidget;
+
     @Column(name = "is_canceled")
     private String isCanceled;
 
@@ -53,11 +55,16 @@ public class Member extends BaseTimeEntity {
         this.resetDay = 1;
         this.currencyUnit = "₩";
         this.isCanceled = "Y";
+        this.isWidget = "N";
         this.name = RandomNameMaker.generateRandomString(7);
     }
 
     public void setResetDay(int resetDay){
         this.resetDay = resetDay;
+    }
+
+    public void useWidget(){
+        this.isWidget = "Y";
     }
 
     public void cancel(){
