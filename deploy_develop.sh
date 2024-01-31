@@ -1,6 +1,6 @@
 docker build --no-cache -t was .
 
-CONTAINER_NAME="was"
+CONTAINER_NAME="was_develop"
 
 # 컨테이너가 실행 중이면 정지 후 삭제
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
@@ -15,7 +15,7 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev --name was was java
+docker run --env-file /root/.env -d -p 8082:8082 -e SPRING_PROFILES_ACTIVE=dev --name was_develop was_develop java
 
 #docker-compose down --volumes --remove-orphans was
 #

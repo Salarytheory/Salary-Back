@@ -16,8 +16,8 @@ jobs:
           password: ${{secrets.REMOTE_SSH_KEY}}
           port: ${{secrets.REMOTE_SSH_PORT}}
           script: |
-            cd /home/project/Salary-Back
+            cd /app/main/Salary-Back
             git stash
             git pull origin main
-            chmod 755 deploy_main.sh
-            ./deploy_develop.sh
+            sudo chmod 755 deploy_main.sh
+            ./deploy_main.sh
