@@ -13,7 +13,7 @@ jobs:
         with:
           host: ${{secrets.REMOTE_IP}}
           username: ${{secrets.SSH_ID}}
-          password: ${{secrets.REMOTE_SSH_KEY}}
+          key: ${{secrets.REMOTE_SSH_KEY}}
           port: ${{secrets.REMOTE_SSH_PORT}}
           script: |
             cd /app/main/Salary-Back
