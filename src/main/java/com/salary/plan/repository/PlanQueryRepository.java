@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.salary.consumption.entity.QConsumption.consumption;
@@ -23,7 +24,7 @@ import static com.salary.category.entity.QCategory.category;
 public class PlanQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
+    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate, LocalDate prevDate, LocalDate nextDate){
         return queryFactory.select(new QMonthlyPlanDto(
                         plan.id, category.name.as("categoryName"), plan.targetAmount,
                         consumption.amount.sum().as("consumptionAmount"),
@@ -33,7 +34,9 @@ public class PlanQueryRepository {
                 .join(category).on(plan.category.eq(category))
                 .leftJoin(consumption).on(consumption.category.eq(category))
                 .where(plan.member.eq(member)
-                        .and(plan.baseDate.eq(baseDate)))
+                        .and(consumption.member.eq(member))
+                        .and(plan.baseDate.eq(baseDate))
+                        .and(consumption.usedAt.between(prevDate, nextDate)))
                 .groupBy(category.name, plan.targetAmount)
                 .fetch();
     }

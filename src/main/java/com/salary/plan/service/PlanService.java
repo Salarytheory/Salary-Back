@@ -11,11 +11,13 @@ import com.salary.plan.entity.Plan;
 import com.salary.plan.repository.GoalManagementRepository;
 import com.salary.plan.repository.PlanQueryRepository;
 import com.salary.plan.repository.PlanRepository;
+import com.salary.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,9 @@ public class PlanService {
     }
 
     public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
-        return planQueryRepository.getMonthlyPlan(member, baseDate);
+        LocalDate prevDate = DateUtil.getTargetDate(baseDate, member.getResetDay());
+        LocalDate nextDate = DateUtil.getNextMonthDate(prevDate);
+        return planQueryRepository.getMonthlyPlan(member, baseDate, prevDate, nextDate);
     }
 
     public void setTargetConsumptionPlan(Member member, List<MonthlyPlanSetDto> monthlyPlanSetDtoList){
