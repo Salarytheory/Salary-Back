@@ -2,8 +2,10 @@ package com.salary.plan.service;
 
 import com.salary.category.entity.Category;
 import com.salary.category.repository.CategoryQueryRepository;
+import com.salary.consumption.dto.MonthlyCategoryConsumptionDto;
 import com.salary.consumption.dto.MonthlyPlanSetDto;
 import com.salary.consumption.dto.TargetAmountDto;
+import com.salary.consumption.repository.ConsumptionQueryRepository;
 import com.salary.member.entity.Member;
 import com.salary.plan.dto.MonthlyPlanDto;
 import com.salary.plan.entity.GoalManagement;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,6 +33,7 @@ public class PlanService {
     private final GoalManagementRepository goalManagementRepository;
     private final PlanRepository planRepository;
     private final CategoryQueryRepository categoryQueryRepository;
+    private final ConsumptionQueryRepository consumptionQueryRepository;
     private final PlanQueryRepository planQueryRepository;
 
     public void setTargetAmount(Member member, TargetAmountDto targetAmountDto){
@@ -36,9 +41,30 @@ public class PlanService {
     }
 
     public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
+        List<MonthlyPlanDto> monthlyPlans = planQueryRepository.getMonthlyPlan(member, baseDate);
+        if(monthlyPlans.isEmpty()){
+            return monthlyPlans;
+        }
+
         LocalDate prevDate = DateUtil.getTargetDate(baseDate, member.getResetDay());
         LocalDate nextDate = DateUtil.getNextMonthDate(prevDate);
-        return planQueryRepository.getMonthlyPlan(member, baseDate, prevDate, nextDate);
+
+        List<MonthlyCategoryConsumptionDto> monthlyCategoryConsumptions
+                = consumptionQueryRepository.getMonthlyCategoryConsumption(member, prevDate, nextDate);
+
+        setConsumptionAmount(monthlyPlans, monthlyCategoryConsumptions);
+        return monthlyPlans;
+    }
+
+    private void setConsumptionAmount(List<MonthlyPlanDto> monthlyPlans, List<MonthlyCategoryConsumptionDto> monthlyCategoryConsumptions){
+        Map<String, Long> consumptionMap = monthlyCategoryConsumptions.stream()
+                .collect(Collectors.toMap(MonthlyCategoryConsumptionDto::categoryName, MonthlyCategoryConsumptionDto::amount));
+
+        monthlyPlans.forEach(monthlyPlan ->
+                monthlyPlan.setConsumptionAmount(
+                        consumptionMap.getOrDefault(monthlyPlan.getCategoryName(), 0L)
+                )
+        );
     }
 
     public void setTargetConsumptionPlan(Member member, List<MonthlyPlanSetDto> monthlyPlanSetDtoList){

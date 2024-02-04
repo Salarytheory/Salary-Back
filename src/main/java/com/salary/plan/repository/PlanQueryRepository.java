@@ -24,20 +24,13 @@ import static com.salary.category.entity.QCategory.category;
 public class PlanQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate, LocalDate prevDate, LocalDate nextDate){
+    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
         return queryFactory.select(new QMonthlyPlanDto(
-                        plan.id, category.name.as("categoryName"), plan.targetAmount,
-                        consumption.amount.sum().as("consumptionAmount"),
-                        plan.targetAmount.subtract(consumption.amount.sum()).as("remainAmount")
-                ))
+                        plan.id, category.name.as("categoryName"), plan.targetAmount))
                 .from(plan)
                 .join(category).on(plan.category.eq(category))
-                .leftJoin(consumption).on(consumption.category.eq(category))
                 .where(plan.member.eq(member)
-                        .and(consumption.member.eq(member))
-                        .and(plan.baseDate.eq(baseDate))
-                        .and(consumption.usedAt.between(prevDate, nextDate)))
-                .groupBy(category.name, plan.targetAmount)
+                        .and(plan.baseDate.eq(baseDate)))
                 .fetch();
     }
 

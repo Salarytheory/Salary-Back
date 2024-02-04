@@ -2,10 +2,8 @@ package com.salary.consumption.repository;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.salary.consumption.dto.ConsumptionHistoryDto;
-import com.salary.consumption.dto.QConsumptionHistoryDto;
-import com.salary.consumption.dto.QStupidConsumptionCurrentSituationDto;
-import com.salary.consumption.dto.StupidConsumptionCurrentSituationDto;
+import com.salary.consumption.dto.*;
+import com.salary.consumption.entity.Consumption;
 import com.salary.consumption.entity.Grade;
 import com.salary.member.entity.Member;
 import com.salary.member.entity.QMember;
@@ -103,5 +101,15 @@ public class ConsumptionQueryRepository {
                 .join(category).on(consumption.category.eq(category))
                 .where(consumption.id.eq(id))
                 .fetchFirst();
+    }
+
+    public List<MonthlyCategoryConsumptionDto> getMonthlyCategoryConsumption(Member member, LocalDate prevDate, LocalDate nextDate){
+        return queryFactory.select(new QMonthlyCategoryConsumptionDto(consumption.category.name.as("categoryName"),
+                        consumption.amount.sum().as("amount")))
+                .from(consumption)
+                .where(consumption.member.eq(member)
+                        .and(consumption.usedAt.between(prevDate, nextDate)))
+                .groupBy(consumption.category)
+                .fetch();
     }
 }
