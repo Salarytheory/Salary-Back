@@ -37,10 +37,8 @@ jobs:
           username: ${{ secrets.SSH_ID }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
-          script: |
-            sudo chmod 777 /app/develop/Salary-Back
           source: "build/libs/salary.jar"
-          target: "/app/develop/Salary-Back/build/libs/salary.jar"
+          target: "/app/develop/Salary-Back/"
 
 
       - name: SSH-deploy
