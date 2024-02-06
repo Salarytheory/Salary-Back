@@ -30,6 +30,17 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon
 
+      - name: Transfer JAR file to deploy server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          source: "build/libs/salary.jar"
+          target: "/app/develop/Salary-Back/build/libs/salary.jar"
+
+
       - name: SSH-deploy
         uses: appleboy/ssh-action@master
         with:
