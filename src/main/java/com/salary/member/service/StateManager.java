@@ -38,6 +38,7 @@ public class StateManager {
 
     private boolean validate(String state, String nonce){
         try {
+            System.out.println(secretKey);
             String input = secretKey + nonce;
             MessageDigest digest1 = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = digest1.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -47,6 +48,7 @@ public class StateManager {
                 hexString.append(String.format("%02X", hashedByte));
             }
             String validationState = hexString.toString();
+            System.out.println(validationState + " // " + state);
             return validationState.equals(state);
         }catch (Exception e){
             log.error("system error : ", e);
