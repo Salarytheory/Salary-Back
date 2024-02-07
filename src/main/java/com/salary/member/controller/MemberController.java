@@ -43,6 +43,7 @@ public class MemberController {
     })
     public ResponseEntity<Void> saveLoginState(@RequestHeader String state, @RequestHeader String nonce){
         try {
+            log.info("test", state, nonce);
             stateManager.saveState(state, nonce);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
