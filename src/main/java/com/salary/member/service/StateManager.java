@@ -38,7 +38,6 @@ public class StateManager {
 
     private boolean validate(String state, String nonce){
         try {
-            System.out.println(secretKey);
             String input = secretKey + nonce;
             MessageDigest digest1 = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = digest1.digest(input.getBytes(StandardCharsets.UTF_8));
