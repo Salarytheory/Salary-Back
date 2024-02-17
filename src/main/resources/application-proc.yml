@@ -9,6 +9,10 @@ spring:
     ansi:
       enabled: always
 
+  logging:
+    file:
+      path: /logs/app.log
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
