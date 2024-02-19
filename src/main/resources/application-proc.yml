@@ -11,7 +11,7 @@ spring:
 
   logging:
     file:
-      path: /logs/app.log
+      name: /var/log/server.log
 
   mvc:
     pathmatch:

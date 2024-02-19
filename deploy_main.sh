@@ -15,4 +15,4 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name was_main was_main
+docker run --env-file /root/.env -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/var/log --name was_main was_main
