@@ -10,8 +10,12 @@ spring:
       enabled: always
 
   logging:
+    level:
+      org:
+        apache:
+          catalina: INFO
     file:
-      name: /var/log/server.log
+      name: logs/catalina.out
 
   mvc:
     pathmatch:

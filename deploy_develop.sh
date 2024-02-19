@@ -15,7 +15,7 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
   docker rm $CONTAINER_NAME
 fi
 
-docker run --env-file /root/.env -d -p 8082:8082 -e SPRING_PROFILES_ACTIVE=dev -v /applog/develop:/var/log --name was_develop was_develop
+docker run --env-file /root/.env -d -p 8082:8082 -e SPRING_PROFILES_ACTIVE=dev -v /applog/develop:/logs --name was_develop was_develop
 
 #docker-compose down --volumes --remove-orphans was
 #

@@ -10,8 +10,18 @@ spring:
       enabled: always
 
   logging:
+    level:
+      org:
+        apache:
+          catalina: INFO
     file:
-      name: /var/log/server.log
+      name: logs/catalina.out
+  
+  #access log 설정
+  server.tomcat.basedir=./
+  server.tomcat.accesslog.enabled=true
+  server.tomcat.accesslog.directory=logs/access
+
 
   mvc:
     pathmatch:
