@@ -9,13 +9,13 @@ spring:
     ansi:
       enabled: always
 
-  logging:
-    level:
-      org:
-        apache:
-          catalina: INFO
-    file:
-      name: logs/catalina.out
+#  logging:
+#    level:
+#      org:
+#        apache:
+#          catalina: INFO
+#    file:
+#      name: logs/catalina.out
   
   #access log 설정
   server.tomcat.basedir=./
