@@ -13,6 +13,14 @@ server:
       pattern: common
     basedir: . #spring boot가 실행되는 디렉토리를 기본 디렉토리로 설정
 
+logging:
+  level:
+    org:
+      apache:
+        catalina: =INFO
+  file:
+    name: logs/catalina.out
+
 spring:
   output:
     ansi:
