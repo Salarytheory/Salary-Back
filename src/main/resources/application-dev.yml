@@ -3,15 +3,6 @@ config:
     on-profile: port-dev
 server:
   port: 8082
-  tomcat:
-    accesslog:
-      enabled: true #로그를 사용하겠다고 지정
-      directory: logs
-      suffix: .log
-      prefix: access_log
-      file-date-format: .yyyy-MM-dd
-      pattern: common
-    basedir: . #spring boot가 실행되는 디렉토리를 기본 디렉토리로 설정
 
 logging:
   level:
@@ -25,15 +16,6 @@ spring:
   output:
     ansi:
       enabled: always
-
-#  logging:
-#    level:
-#      org:
-#        apache:
-#          catalina: INFO
-#    file:
-#      name: logs/catalina.out
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
