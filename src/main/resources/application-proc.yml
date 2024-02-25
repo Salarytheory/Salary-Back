@@ -3,7 +3,6 @@ config:
     on-profile: port-proc
 server:
   port: 8080
-  tomcat:
 
 logging:
   level:
