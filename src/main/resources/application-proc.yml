@@ -9,7 +9,7 @@ logging:
   level:
     org:
       apache:
-        catalina: =INFO
+        catalina: INFO
   file:
     name: logs/catalina.out
 
