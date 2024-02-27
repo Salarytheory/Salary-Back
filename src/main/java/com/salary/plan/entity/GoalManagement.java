@@ -32,4 +32,8 @@ public class GoalManagement {
         this.targetDate = targetAmountDto.targetDate();
         this.targetAmount = targetAmountDto.targetAmount();
     }
+
+    public void setTargetAmount(long targetAmount){
+        this.targetAmount = targetAmount;
+    }
 }

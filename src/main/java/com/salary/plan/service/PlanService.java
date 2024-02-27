@@ -10,6 +10,7 @@ import com.salary.member.entity.Member;
 import com.salary.plan.dto.MonthlyPlanDto;
 import com.salary.plan.entity.GoalManagement;
 import com.salary.plan.entity.Plan;
+import com.salary.plan.repository.GoalManagementQueryRepository;
 import com.salary.plan.repository.GoalManagementRepository;
 import com.salary.plan.repository.PlanQueryRepository;
 import com.salary.plan.repository.PlanRepository;
@@ -31,13 +32,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlanService {
     private final GoalManagementRepository goalManagementRepository;
+    private final GoalManagementQueryRepository goalManagementQueryRepository;
     private final PlanRepository planRepository;
     private final CategoryQueryRepository categoryQueryRepository;
     private final ConsumptionQueryRepository consumptionQueryRepository;
     private final PlanQueryRepository planQueryRepository;
 
     public void setTargetAmount(Member member, TargetAmountDto targetAmountDto){
-        goalManagementRepository.save(new GoalManagement(member, targetAmountDto));
+        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, targetAmountDto.targetDate());
+        if(goalManagement == null){
+            goalManagementRepository.save(new GoalManagement(member, targetAmountDto));
+            return;
+        }
+        goalManagement.setTargetAmount(targetAmountDto.targetAmount());
+        goalManagementRepository.save(goalManagement);
     }
 
     public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
