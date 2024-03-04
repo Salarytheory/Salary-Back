@@ -19,10 +19,10 @@
 
 
 # 현재 실행 중인 컨테이너의 포트 확인
-current_port=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort}}' was_main 2>/dev/null)
+current_port=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort}}' was_main_1 2>/dev/null)
 
 if [ -z "$current_port" ]; then
-  current_port=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "9090/tcp") 0).HostPort}}' was_main 2>/dev/null)
+  current_port=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "9090/tcp") 0).HostPort}}' was_main_2 2>/dev/null)
 fi
 
 if [ -z "$current_port" ]; then
