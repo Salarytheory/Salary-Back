@@ -25,37 +25,33 @@ if [ -z "$current_port" ]; then
   current_port=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "9090/tcp") 0).HostPort}}' was_main_2 2>/dev/null)
 fi
 
-if [ -z "$current_port" ]; then
-  echo "No container is running on port 8080 or 9090"
+echo "Container is running on port $current_port"
+
+# 새로운 포트 계산
+if [ "$current_port" == "8080" ]; then
+  new_port=9090
+  new_container_name=was_main_2
 else
-  echo "Container is running on port $current_port"
-
-  # 새로운 포트 계산
-  if [ "$current_port" == "8080" ]; then
-    new_port=9090
-    new_container_name=was_main_2
-  else
-    new_port=8080
-    new_container_name=was_main_1
-  fi
-
-  echo "Starting new container $new_container_name on port $new_port"
-
-  # 새로운 포트를 환경 변수 파일에 추가
-  echo "SERVER_PORT=$new_port" >> /root/.env
-
-  # 새로운 컨테이너 시작
-  docker run --env-file /root/.env -d -p $new_port:$new_port -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name $new_container_name was_main
-
-  # 엔진엑스 프록시 패스 업데이트
-  sed -i "s|proxy_pass .*;|proxy_pass http://127.0.0.1:$new_port;|" /etc/nginx/nginx.conf
-  nginx -s reload
-
-  echo "Updated Nginx proxy_pass to port $new_port"
-
-  # 기존 컨테이너 중지 및 삭제 (동적으로 변경)
-  docker stop $new_container_name
-  docker rm $new_container_name
-
-  echo "Stopped and removed old container running on port $current_port"
+  new_port=8080
+  new_container_name=was_main_1
 fi
+
+echo "Starting new container $new_container_name on port $new_port"
+
+# 새로운 포트를 환경 변수 파일에 추가
+echo "SERVER_PORT=$new_port" >> /root/.env
+
+# 새로운 컨테이너 시작
+docker run --env-file /root/.env -d -p $new_port:$new_port -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name $new_container_name was_main
+
+# 엔진엑스 프록시 패스 업데이트
+sed -i "s|proxy_pass .*;|proxy_pass http://127.0.0.1:$new_port;|" /etc/nginx/nginx.conf
+nginx -s reload
+
+echo "Updated Nginx proxy_pass to port $new_port"
+
+# 기존 컨테이너 중지 및 삭제 (동적으로 변경)
+docker stop $new_container_name
+docker rm $new_container_name
+
+echo "Stopped and removed old container running on port $current_port"
