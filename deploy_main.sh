@@ -45,8 +45,8 @@ echo "SERVER_PORT=$new_port" >> /root/.env
 docker run --env-file /root/.env -d -p $new_port:$new_port -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name $new_container_name was_main
 
 # 엔진엑스 프록시 패스 업데이트
-sed -i "s|proxy_pass .*;|proxy_pass http://127.0.0.1:$new_port;|" /etc/nginx/nginx.conf
-nginx -s reload
+#sed -i "s|proxy_pass .*;|proxy_pass http://127.0.0.1:$new_port;|" /etc/nginx/nginx.conf
+#nginx -s reload
 
 echo "Updated Nginx proxy_pass to port $new_port"
 
