@@ -61,7 +61,7 @@ public class ConsumptionService {
 
     public PaginationDto<List<ConsumptionHistoryDto>> getMonthlyConsumptionHistory(Member member, String baseDate, Pageable pageable){
         List<ConsumptionHistoryDto> result = consumptionQueryRepository.getMonthlyConsumptionHistory(member, baseDate, pageable);
-        long count = consumptionQueryRepository.getMonthlyConsumptionHistoryCount(member, baseDate, pageable);
+        long count = consumptionQueryRepository.getMonthlyConsumptionHistoryCount(member, baseDate);
         return new PaginationDto<>(result, count);
 
     }

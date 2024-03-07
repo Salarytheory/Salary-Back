@@ -72,13 +72,13 @@ public class ConsumptionQueryRepository {
                 .join(category).on(consumption.category.eq(category))
                 .where(consumption.member.eq(member)
                         .and(consumption.usedAt.between(start, end)))
-                .offset(pageable.getPageNumber())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(consumption.usedAt.desc(), consumption.grade.asc(), consumption.id.desc())
                 .fetch();
     }
 
-    public Long getMonthlyConsumptionHistoryCount(Member member, String baseDate, Pageable pageable){
+    public Long getMonthlyConsumptionHistoryCount(Member member, String baseDate){
         LocalDate start = DateUtil.getTargetDate(baseDate, member.getResetDay());
         LocalDate end = DateUtil.getNextMonthDate(start);
 
@@ -87,8 +87,6 @@ public class ConsumptionQueryRepository {
                 .join(category).on(consumption.category.eq(category))
                 .where(consumption.member.eq(member)
                         .and(consumption.usedAt.between(start, end)))
-                .offset(pageable.getPageNumber())
-                .limit(pageable.getPageSize())
                 .fetchFirst();
     }
 
