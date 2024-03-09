@@ -1,8 +1,8 @@
-config:
-  activate:
-    on-profile: port-proc
-server:
-  port: "${SERVER_PORT}"
+#config:
+#  activate:
+#    on-profile: port-proc
+#server:
+#  port: "${SERVER_PORT}"
 
 logging:
   level:
