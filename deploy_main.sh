@@ -41,6 +41,8 @@ else
   old_container_name=was_main_2
 fi
 
+docker build --no-cache -t $new_container_name .
+
 echo "Starting new container $new_container_name on port $new_port"
 
 # 새로운 포트를 환경 변수 파일에 추가
