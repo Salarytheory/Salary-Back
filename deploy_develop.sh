@@ -1,5 +1,7 @@
 docker build --no-cache -t was_develop .
 
+echo "SERVER_PORT=8082" >> /root/.env
+
 CONTAINER_NAME="was_develop"
 
 # 컨테이너가 실행 중이면 정지 후 삭제
