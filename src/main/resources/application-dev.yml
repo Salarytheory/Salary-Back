@@ -2,7 +2,7 @@ config:
   activate:
     on-profile: port-dev
 server:
-  port: "${SERVER_PORT}"
+  port: 8082
 
 logging:
   level:
