@@ -47,7 +47,7 @@ echo "Starting new container $new_container_name on port $new_port"
 echo "SERVER_PORT=$new_port" >> /root/.env
 
 # 새로운 컨테이너 시작
-docker run --env-file /root/.env -d -p $new_port:$new_port -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name $new_container_name was_main
+docker run --env-file /root/.env -d -p $new_port:$new_port -e SPRING_PROFILES_ACTIVE=proc -v /applog/main:/logs --name $new_container_name $new_container_name
 
 # 엔진엑스 프록시 패스 업데이트
 sudo sed -i "s|proxy_pass .*;|proxy_pass http://127.0.0.1:$new_port;|" /etc/nginx/nginx.conf
