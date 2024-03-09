@@ -18,7 +18,7 @@ public class HomeController {
             content = @Content(schema = @Schema(implementation = String.class)))
     @GetMapping("health")
     public String checkHealth(){
-        return "api_ver_0.1";
+        return "api_ver_0.2";
     }
 
     @GetMapping("auth-check")
