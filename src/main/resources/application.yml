@@ -8,6 +8,6 @@ spring:
       proc:
         - db-proc
         - port-proc
-    include:
-      - db
-      - port
+#    include:
+#      - db
+#      - port
