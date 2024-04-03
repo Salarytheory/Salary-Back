@@ -10,7 +10,7 @@ import com.salary.member.entity.Member;
 import com.salary.member.repository.MemberRepository;
 import com.salary.plan.entity.GoalManagement;
 import com.salary.plan.repository.GoalManagementQueryRepository;
-import com.salary.util.dto.PaginationDto;
+import com.salary.common.util.util.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

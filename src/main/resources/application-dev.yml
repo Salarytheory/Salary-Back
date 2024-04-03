@@ -1,8 +1,10 @@
-#config:
-#  activate:
-#    on-profile: port-dev
-#server:
-#  port: 8082
+management:
+  endpoints:
+    web:
+      exposure:
+        include: httptrace
+
+
 
 logging:
   level:
@@ -35,6 +37,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
 
   redis:
     host: "${REDIS_HOST}"

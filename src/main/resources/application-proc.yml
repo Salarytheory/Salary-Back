@@ -1,8 +1,8 @@
-#config:
-#  activate:
-#    on-profile: port-proc
-#server:
-#  port: "${SERVER_PORT}"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: httptrace
 
 logging:
   level:

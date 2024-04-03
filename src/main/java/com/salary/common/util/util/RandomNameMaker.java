@@ -1,4 +1,4 @@
-package com.salary.util;
+package com.salary.common.util.util;
 
 import java.security.SecureRandom;
 

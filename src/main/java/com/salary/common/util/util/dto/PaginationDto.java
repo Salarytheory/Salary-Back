@@ -1,4 +1,4 @@
-package com.salary.util.dto;
+package com.salary.common.util.util.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

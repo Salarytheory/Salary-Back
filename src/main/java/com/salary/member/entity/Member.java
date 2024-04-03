@@ -2,7 +2,7 @@ package com.salary.member.entity;
 
 import com.salary.global.entity.BaseTimeEntity;
 import com.salary.member.dto.SocialAuthInfoDto;
-import com.salary.util.RandomNameMaker;
+import com.salary.common.util.util.RandomNameMaker;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

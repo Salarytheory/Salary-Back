@@ -1,4 +1,4 @@
-package com.salary.util;
+package com.salary.common.util.util;
 
 import java.time.LocalDate;
 import java.time.YearMonth;

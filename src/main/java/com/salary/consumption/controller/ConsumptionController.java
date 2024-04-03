@@ -3,7 +3,7 @@ package com.salary.consumption.controller;
 import com.salary.consumption.dto.*;
 import com.salary.consumption.service.ConsumptionService;
 import com.salary.member.entity.Member;
-import com.salary.util.dto.PaginationDto;
+import com.salary.common.util.util.dto.PaginationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
