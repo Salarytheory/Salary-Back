@@ -38,31 +38,25 @@ public class ConsumptionQueryRepository {
         return totalAmount == null ? 0 : totalAmount;
     }
 
-    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String baseDate){
-        LocalDate start = DateUtil.getTargetDate(baseDate, member.getResetDay());
-        LocalDate end = DateUtil.getNextMonthDate(start);
-
+    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String startDate, String endDate){
         return queryFactory.select(new QStupidConsumptionCurrentSituationDto(
                 JPAExpressions.select(consumption.amount.sum().coalesce(0L).as("greatAmount"))
                         .from(consumption)
                         .where(consumption.member.eq(member)
                                 .and(consumption.grade.eq(Grade.GREAT))
-                                .and(consumption.usedAt.between(start, end))),
+                                .and(consumption.usedAt.between(DateUtil.convertStringToLocalDate(startDate), DateUtil.convertStringToLocalDate(endDate)))),
                 JPAExpressions.select(consumption.amount.sum().coalesce(0L).as("stupidAmount"))
                         .from(consumption)
                         .where(consumption.member.eq(member)
                                 .and(consumption.grade.eq(Grade.STUPID))
-                                .and(consumption.usedAt.between(start, end)))
+                                .and(consumption.usedAt.between(DateUtil.convertStringToLocalDate(startDate), DateUtil.convertStringToLocalDate(endDate))))
                 ))
                 .from(consumption)
                 .limit(1)
                 .fetchOne();
     }
 
-    public List<ConsumptionHistoryDto> getMonthlyConsumptionHistory(Member member, String baseDate, Pageable pageable){
-        LocalDate start = DateUtil.getTargetDate(baseDate, member.getResetDay());
-        LocalDate end = DateUtil.getNextMonthDate(start);
-
+    public List<ConsumptionHistoryDto> getMonthlyConsumptionHistory(Member member, String startDate, String endDate, Pageable pageable){
         return queryFactory.select(new QConsumptionHistoryDto(
                     consumption.id.as("consumptionId"), consumption.name, consumption.amount.as("spentAmount"),
                     category.name.as("categoryName"), consumption.usedAt, consumption.grade
@@ -70,22 +64,20 @@ public class ConsumptionQueryRepository {
                 .from(consumption)
                 .join(category).on(consumption.category.eq(category))
                 .where(consumption.member.eq(member)
-                        .and(consumption.usedAt.between(start, end)))
+                        .and(consumption.usedAt.between(DateUtil.convertStringToLocalDate(startDate), DateUtil.convertStringToLocalDate(endDate))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(consumption.usedAt.desc(), consumption.grade.asc(), consumption.id.desc())
                 .fetch();
     }
 
-    public Long getMonthlyConsumptionHistoryCount(Member member, String baseDate){
-        LocalDate start = DateUtil.getTargetDate(baseDate, member.getResetDay());
-        LocalDate end = DateUtil.getNextMonthDate(start);
+    public Long getMonthlyConsumptionHistoryCount(Member member, String startDate, String endDate){
 
         return queryFactory.select(consumption.count())
                 .from(consumption)
                 .join(category).on(consumption.category.eq(category))
                 .where(consumption.member.eq(member)
-                        .and(consumption.usedAt.between(start, end)))
+                        .and(consumption.usedAt.between(DateUtil.convertStringToLocalDate(startDate), DateUtil.convertStringToLocalDate(endDate))))
                 .fetchFirst();
     }
 

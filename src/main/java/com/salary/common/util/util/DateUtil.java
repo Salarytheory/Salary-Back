@@ -30,4 +30,12 @@ public class DateUtil {
     public static LocalDate getNextMonthDate(LocalDate prev){
         return prev.plusMonths(1).minusDays(1);
     }
+
+    public static LocalDate convertStringToLocalDate(String date){
+        String[] cutDate = date.split("-");
+        int year = Integer.parseInt(cutDate[0]);
+        int month = Integer.parseInt(cutDate[1]);
+        int day = Integer.parseInt(cutDate[2]);
+        return LocalDate.of(year, month, day);
+    }
 }

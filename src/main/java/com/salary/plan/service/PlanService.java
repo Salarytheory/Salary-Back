@@ -39,7 +39,7 @@ public class PlanService {
     private final PlanQueryRepository planQueryRepository;
 
     public void setTargetAmount(Member member, TargetAmountDto targetAmountDto){
-        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, targetAmountDto.targetDate());
+        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, targetAmountDto.startTargetMonth());
         if(goalManagement == null){
             goalManagementRepository.save(new GoalManagement(member, targetAmountDto));
             return;
@@ -48,13 +48,13 @@ public class PlanService {
         goalManagementRepository.save(goalManagement);
     }
 
-    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String baseDate){
-        List<MonthlyPlanDto> monthlyPlans = planQueryRepository.getMonthlyPlan(member, baseDate);
+    public List<MonthlyPlanDto> getMonthlyPlan(Member member, String startTargetMonth){
+        List<MonthlyPlanDto> monthlyPlans = planQueryRepository.getMonthlyPlan(member, startTargetMonth);
         if(monthlyPlans.isEmpty()){
             return monthlyPlans;
         }
 
-        LocalDate prevDate = DateUtil.getTargetDate(baseDate, member.getResetDay());
+        LocalDate prevDate = DateUtil.getTargetDate(startTargetMonth, member.getResetDay());
         LocalDate nextDate = DateUtil.getNextMonthDate(prevDate);
 
         List<MonthlyCategoryConsumptionDto> monthlyCategoryConsumptions

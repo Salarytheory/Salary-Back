@@ -17,8 +17,8 @@ public class GoalManagement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "target_date")
-    private String targetDate;
+    @Column(name = "start_target_month")
+    private String startTargetMonth;
 
     @Column(name = "target_amount")
     private long targetAmount;
@@ -29,7 +29,7 @@ public class GoalManagement {
 
     public GoalManagement(Member member, TargetAmountDto targetAmountDto){
         this.member = member;
-        this.targetDate = targetAmountDto.targetDate();
+        this.startTargetMonth = targetAmountDto.startTargetMonth();
         this.targetAmount = targetAmountDto.targetAmount();
     }
 

@@ -76,7 +76,7 @@ public class MemberController {
     }
 
     @PatchMapping
-    @Operation(summary = "초기화날짜 수정", description = "계획 및 목표금액이 초기화되는 날짜를 설정한다")
+    @Operation(summary = "초기화날짜(월급날) 설정", description = "계획 및 목표금액이 초기화되는 날짜설정 및 기존 계획,목표금액 초기화")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정성공"),
             @ApiResponse(responseCode = "400", description = "날짜 범위초과 (1~31)")

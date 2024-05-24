@@ -15,11 +15,11 @@ import static com.salary.plan.entity.QGoalManagement.goalManagement;
 public class GoalManagementQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public GoalManagement getGoalInfo(Member member, String baseDate){
+    public GoalManagement getGoalInfo(Member member, String startTargetMonth){
         return queryFactory.select(goalManagement)
                 .from(goalManagement)
                 .where(goalManagement.member.eq(member)
-                        .and(goalManagement.targetDate.eq(baseDate)))
+                        .and(goalManagement.startTargetMonth.eq(startTargetMonth)))
                 .fetchOne();
     }
 }

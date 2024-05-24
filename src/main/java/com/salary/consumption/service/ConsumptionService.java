@@ -30,24 +30,22 @@ public class ConsumptionService {
     private final CategoryQueryRepository categoryQueryRepository;
     private final GoalManagementQueryRepository goalManagementQueryRepository;
 
-    public ConsumptionSummaryDto getSummary(Member member, String baseDate){
+    public ConsumptionSummaryDto getSummary(Member member, String startTargetMonth){
         long targetAmount = 0;
-        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, baseDate);
+        GoalManagement goalManagement = goalManagementQueryRepository.getGoalInfo(member, startTargetMonth);
         if(goalManagement != null){
             targetAmount = goalManagement.getTargetAmount();
         }
-        long totalSpentAmount = consumptionQueryRepository.getTotalSpentAmount(member, baseDate);
+        long totalSpentAmount = consumptionQueryRepository.getTotalSpentAmount(member, startTargetMonth);
         return new ConsumptionSummaryDto(targetAmount, totalSpentAmount, targetAmount - totalSpentAmount);
     }
 
-    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String baseDate, String isWidget){
-        StupidConsumptionCurrentSituationDto stupidConsumptionCurrentSituation
-                = consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, baseDate);
+    public StupidConsumptionCurrentSituationDto getStupidConsumptionCurrentSituation(Member member, String startDate, String endDate, String isWidget){
         if("Y".equals(isWidget)){
             member.useWidget();
             memberRepository.save(member);
         }
-        return consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, baseDate);
+        return consumptionQueryRepository.getStupidConsumptionCurrentSituation(member, startDate, endDate);
     }
 
     public void record(Member member, ConsumptionRecordDto consumptionRecordDto){
@@ -59,9 +57,10 @@ public class ConsumptionService {
         consumptionRepository.save(new Consumption(member, consumptionRecordDto, category));
     }
 
-    public PaginationDto<List<ConsumptionHistoryDto>> getMonthlyConsumptionHistory(Member member, String baseDate, Pageable pageable){
-        List<ConsumptionHistoryDto> result = consumptionQueryRepository.getMonthlyConsumptionHistory(member, baseDate, pageable);
-        long count = consumptionQueryRepository.getMonthlyConsumptionHistoryCount(member, baseDate);
+    public PaginationDto<List<ConsumptionHistoryDto>> getMonthlyConsumptionHistory(Member member, String startDate, String endDate, Pageable pageable){
+        List<ConsumptionHistoryDto> result
+                = consumptionQueryRepository.getMonthlyConsumptionHistory(member, startDate, endDate, pageable);
+        long count = consumptionQueryRepository.getMonthlyConsumptionHistoryCount(member, startDate, endDate);
         return new PaginationDto<>(result, count);
 
     }

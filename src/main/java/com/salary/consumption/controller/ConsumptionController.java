@@ -33,21 +33,23 @@ public class ConsumptionController {
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
     public ResponseEntity<ConsumptionSummaryDto> getSummary(@AuthenticationPrincipal Member member,
-                                                            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String baseDate){
-        ConsumptionSummaryDto consumptionSummaryDto = consumptionService.getSummary(member, baseDate);
+                                                            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String startTargetMonth){
+        ConsumptionSummaryDto consumptionSummaryDto = consumptionService.getSummary(member, startTargetMonth);
         return new ResponseEntity<>(consumptionSummaryDto, HttpStatus.OK);
     }
 
-    @GetMapping("/stupid-situation/{base-date}/{is-widget}")
+    @GetMapping("/stupid-situation/{start-date}/{end-date}/{is-widget}")
     @Operation(summary = "스튜핏 소비 현황 조회", description = "스튜핏, 그레잇 소비금액 및 비율을 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
     public ResponseEntity<StupidConsumptionCurrentSituationDto> getStupidConsumptionCurrentSituation(
             @AuthenticationPrincipal Member member,
-            @Parameter(description = "기준연월 (yyyy-MM)") @PathVariable("base-date") String baseDate,
+            @Parameter(description = "시작일 (yyyy-mm-dd)") @PathVariable("start-date") String startDate,
+            @Parameter(description = "종료일 (yyyy-mm-dd)") @PathVariable("end-date") String endDate,
             @Parameter(description = "위젯o : Y, 위젯x : N") @PathVariable("is-widget") String isWidget){
-        StupidConsumptionCurrentSituationDto result = consumptionService.getStupidConsumptionCurrentSituation(member, baseDate, isWidget);
+        StupidConsumptionCurrentSituationDto result
+                = consumptionService.getStupidConsumptionCurrentSituation(member, startDate, endDate, isWidget);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -67,17 +69,19 @@ public class ConsumptionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/monthly/{base-date}")
+    @GetMapping("/monthly/{start-date}/{end-date}")
     @Operation(summary = "지출내역조회", description = "월별 지출 내역을 조회한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
     public ResponseEntity<PaginationDto<List<ConsumptionHistoryDto>>> getConsumptionHistory(
             @AuthenticationPrincipal Member member,
-            @Parameter(description = "조회하려는 연월 (ex : 2023-12)") @PathVariable("base-date") String baseDate,
+            @Parameter(description = "시작일 (yyyy-mm-dd)") @PathVariable("start-date") String startDate,
+            @Parameter(description = "종료일 (yyyy-mm-dd)") @PathVariable("end-date") String endDate,
             @Parameter(description = "페이지번호") @RequestParam int page,
             @Parameter(description = "페이지 당 개수") @RequestParam int size){
-        PaginationDto<List<ConsumptionHistoryDto>> result = consumptionService.getMonthlyConsumptionHistory(member, baseDate, PageRequest.of(page, size));
+        PaginationDto<List<ConsumptionHistoryDto>> result
+                = consumptionService.getMonthlyConsumptionHistory(member, startDate, endDate, PageRequest.of(page, size));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

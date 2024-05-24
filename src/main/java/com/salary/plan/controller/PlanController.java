@@ -6,7 +6,6 @@ import com.salary.member.entity.Member;
 import com.salary.plan.dto.MonthlyPlanDto;
 import com.salary.plan.service.PlanService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,13 +28,12 @@ public class PlanController {
     private final PlanService planService;
 
     @PostMapping("/target-amount")
-    @Operation(summary = "월별 목표금액설정", description = "매월 설정한 계획금액을 전달하여 저장한다")
+    @Operation(summary = "목표금액설정", description = "매월 설정한 계획금액을 전달하여 저장한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "저장성공"),
             @ApiResponse(responseCode = "400", description = "중복목표설정")
     })
     public ResponseEntity<Void> saveTargetAmount(@AuthenticationPrincipal Member member,
-                                                 @Parameter(description = "기준연월 (yyyy-MM)")
                                                  @RequestBody TargetAmountDto targetAmountDto){
         try {
             planService.setTargetAmount(member, targetAmountDto);
